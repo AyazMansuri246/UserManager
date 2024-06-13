@@ -1,0 +1,21 @@
+.userContainer{
+    width: 500px;
+    height: 300px;
+    border: 1px solid red;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+.user{
+ display: flex; 
+}
+.user > button{
+  width: 20%;
+}
+.userName{
+  /* display: inline; */
+  width: 60%;
+  text-align: center;
+}
