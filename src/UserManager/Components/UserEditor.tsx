@@ -66,17 +66,17 @@ const names = [
   "role5",
   "role6",
 ];
-    const [personName, setPersonName] = React.useState<string[]>([]);
+    // const [personName, setPersonName] = React.useState<string[]>([]);
 
-    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-      const {
-        target: { value },
-      } = event;
-      setPersonName(
-        // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
-      );
-    };
+    // const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    //   const {
+    //     target: { value },
+    //   } = event;
+    //   setPersonName(
+    //     // On autofill we get a stringified value.
+    //     typeof value === 'string' ? value.split(',') : value,
+    //   );
+    // };
 
 
     const [UserData,setUserData] = useState({
@@ -99,55 +99,57 @@ const names = [
         })
     }
 
-    console.log(personName)
+    // console.log(personName)
 
-    const HandleSubmit = (e: React.FormEvent<EventTarget>)=>{
-      e.preventDefault();
+    // const HandleSubmit = (e: React.FormEvent<EventTarget>)=>{
+    //   e.preventDefault();
 
-      const NewUser = identifyUserObj;
-      if(identifyUserObj.UserID==0){
-        NewUser.UserID=MaxId +1 ;
-      }
-      NewUser.UserName = UserData.name;
-      NewUser.Password = UserData.password;
-      NewUser.Roles = [];
-    for(let i=0;i<selectionModel.length;i++){
-      for(let j=0;j<RolesArr.length;j++){
-        if(selectionModel[i] == RolesArr[j].RoleID){
-                   NewUser.Roles.push(RolesArr[j]);
-                   break;
-        }
-      }
-    }
+    //   const NewUser = identifyUserObj;
+    //   if(identifyUserObj.UserID==0){
+    //     NewUser.UserID=MaxId +1 ;
+    //   }
+    //   NewUser.UserName = UserData.name;
+    //   NewUser.Password = UserData.password;
+    //   NewUser.Roles = [];
+    // for(let i=0;i<selectionModel.length;i++){
+    //   for(let j=0;j<RolesArr.length;j++){
+    //     if(selectionModel[i] == RolesArr[j].RoleID){
+    //                NewUser.Roles.push(RolesArr[j]);
+    //                break;
+    //     }
+    //   }
+    // }
 
-    console.log(NewUser);
+    // console.log(NewUser);
 
-    handleClose();
+    // handleClose();
 
-    }
+    // }
 
  
     //for datagrid for rows
-    const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
-let RolesArr:Role[]=[];
+//     const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
+// let RolesArr:Role[]=[];
 
-for(let i=0;i<5;i++){
-  const temprole:Role=new Role();
-  temprole.RoleID=i+1;
-  temprole.RoleName=rolename[i];
-  temprole.RolePermissions=[];
-  temprole.WellPermissions=[];
-  temprole.LastError="";
-  RolesArr[i]=temprole;
-}
+// for(let i=0;i<5;i++){
+//   const temprole:Role=new Role();
+//   temprole.RoleID=i+1;
+//   temprole.RoleName=rolename[i];
+//   temprole.RolePermissions=[];
+//   temprole.WellPermissions=[];
+//   temprole.LastError="";
+//   RolesArr[i]=temprole;
+// }
 
-    const rows = [
-      { id: RolesArr[0].RoleID, name: RolesArr[0].RoleName},
-      { id: RolesArr[1].RoleID, name: RolesArr[1].RoleName},
-      { id: RolesArr[2].RoleID, name: RolesArr[2].RoleName},
-      { id: RolesArr[3].RoleID, name: RolesArr[3].RoleName},
-      { id: RolesArr[4].RoleID, name: RolesArr[4].RoleName},
-    ];
+    let userRoles = [];
+    for(let i=0;i<identifyUserObj.Roles.length;i++){
+      let obj:{id:number,name:string}={id:0,name:"a"};
+      obj.id=identifyUserObj.Roles[i].RoleID;
+      obj.name=identifyUserObj.Roles[i].RoleName;
+      userRoles.push(obj);
+    }
+
+    const rows =userRoles;
     const columns = [
       { field: 'id', headerName: 'ID', width: 90 },
       { field: 'name', headerName: 'Role Name', width: 150 },
@@ -169,15 +171,15 @@ for(let i=0;i<5;i++){
         <form>
             <div className="form-group" style={{width:'500px', marginBottom:"20px"}}>
                 <label>Name</label>
-                <input type="test" className="form-control" aria-describedby="emailHelp" placeholder="Enter email" name='name' value={UserData.name} onChange={inputHandler}/>
+                <input type="test" className="form-control" aria-describedby="emailHelp" placeholder="Enter Name" name='name' value={UserData.name} onChange={inputHandler}/>
             </div>
             <div className="form-group" style={{width:'500px', marginBottom:"20px"}}>
                 <label >Password</label>
                 <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" name='password' value={UserData.password} onChange={inputHandler}/>
             </div>
 
-            <div className="form-group" style={{width:'500px', marginBottom:"20px"}}>
-                <label style={{width:'50px'}}>Roles</label>
+            {/* <div className="form-group" style={{width:'500px', marginBottom:"20px"}}>
+            <label style={{width:'50px'}}>Roles</label>
                 <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
                   <DataGrid hideFooter {...data} checkboxSelection columns={columns} 
                   onRowSelectionModelChange={(newRowSelectionModel) => {
@@ -186,12 +188,26 @@ for(let i=0;i<5;i++){
                   rowSelectionModel={selectionModel}
                      />
                 </div>
-            </div>
+            </div> */}
   
             {/* <button type="submit" onClick={HandleSubmit} className="btn btn-primary">Submit</button> */}
+
+            
+            <label style={{width:'50px'}}>Roles</label>
+            <Button variant='contained'>Add Roles</Button>
+
+            <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
+                  <DataGrid hideFooter {...data}  columns={columns} 
+                     />
+                </div>
+              
+
+
             <Stack direction="row" spacing={4}>
               
-            <Button variant="contained" color="success" type="submit" onClick={HandleSubmit}>Save</Button>
+            <Button variant="contained" color="success" type="submit" 
+            // onClick={HandleSubmit}
+            >Save</Button>
               
             <Button variant="contained" color="error" onClick={handleClose}> Cancel </Button>
             </Stack>

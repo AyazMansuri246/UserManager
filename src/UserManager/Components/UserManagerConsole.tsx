@@ -139,7 +139,7 @@ for(let i=0;i<3;i++){
   tempUser.Password=usernames[i]+"12345";
   tempUser.LastError="";
   tempUser.Warnings="";
-  tempUser.Roles=[randomArrayItem(r1)];
+  tempUser.Roles=[randomArrayItem(r1),randomArrayItem(r1)];
   UserArr[i]=tempUser;
 }
 
@@ -183,7 +183,6 @@ export default function FullFeaturedCrudGrid() {
   const [dialog,setDialog] =React.useState<boolean>(false)
   const [EditObject , setEditObject] = React.useState<User>(new User());
 
-
   const handleClose = (value: string) => {
     setDialog(false);
     setSelectedValue(value);
@@ -215,7 +214,10 @@ export default function FullFeaturedCrudGrid() {
 
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+     let confirmation =window.confirm("Your want to delete the user?");
+    if(confirmation){
+      setRows(rows.filter((row) => row.id !== id));
+    }
   };
 
 
