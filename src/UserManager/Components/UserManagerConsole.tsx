@@ -171,7 +171,6 @@ const initialRows: GridRowsProp = [
     name: UserArr[2].UserName,
     role:getRoles(UserArr[2].Roles),
   },
-  
 ];
 
 
