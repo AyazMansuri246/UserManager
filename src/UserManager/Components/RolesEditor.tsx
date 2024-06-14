@@ -1,9 +1,13 @@
 import { Dialog, DialogTitle, DialogContent, Stack, Button } from '@mui/material';
 import { GridRowSelectionModel, DataGrid } from '@mui/x-data-grid';
-import React from 'react'
+import React, { useState } from 'react'
 import { Role } from '../DataObjects/Role';
 
-const RolesEditor = () => {
+interface props {
+  RoleDialogOpen: () => void;
+}
+
+const RolesEditor:React.FC<props> = (props) => {
 
     const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
     let RolesArr:Role[]=[];
@@ -31,23 +35,27 @@ const RolesEditor = () => {
         ];
         
         const data = { rows, columns };
+
+        const [RoleDialogOpen,setRoleDialogOpen] = useState<boolean>(true);
   function handleClose(): void {
-    console.log("closed")
+    console.log("closed");
+    props.RoleDialogOpen();
+
   }
 
   function HandleSubmit(): void {
-    console.log("In Add roles");
+    console.log("In Add roles ", selectionModel);
   }
 
         // const selectedRoleIDArr:number[] = props.identifyUserObj.Roles.map((role) => {return role.RoleID})   
     
-        // const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>(selectedRoleIDArr);
+        const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>();
         
         
   return (
     <div>
       
-      <Dialog onClose={handleClose} maxWidth='xl' open={true} >
+      <Dialog onClose={handleClose} maxWidth='xl' open={RoleDialogOpen} >
         <DialogTitle>User Editor</DialogTitle>
        <DialogContent>
         <form>
@@ -57,6 +65,10 @@ const RolesEditor = () => {
                 <label style={{width:'50px'}}>Roles</label>
                 <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
                   <DataGrid hideFooter {...data} checkboxSelection columns={columns} 
+                  onRowSelectionModelChange={(newRowSelectionModel) => {
+                    setSelectionModel(newRowSelectionModel);
+                  }}
+                  rowSelectionModel={selectionModel}
                   
                      />
                 </div>
@@ -65,7 +77,7 @@ const RolesEditor = () => {
             {/* <button type="submit" onClick={HandleSubmit} className="btn btn-primary">Submit</button> */}
             <Stack direction="row" spacing={4}>
               
-            <Button variant="contained" color="success" type="submit" onClick={HandleSubmit}>Save</Button>
+            <Button variant="contained" color="success"  onClick={HandleSubmit}>Save</Button>
               
             <Button variant="contained" color="error" onClick={handleClose}> Cancel </Button>
             </Stack>

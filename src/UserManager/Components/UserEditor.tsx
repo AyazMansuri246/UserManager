@@ -14,6 +14,7 @@ import { randomArrayItem, useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid, GRID_CHECKBOX_SELECTION_COL_DEF, GridRowSelectionModel } from '@mui/x-data-grid';
 import { Role } from '../DataObjects/Role';
 import { setSelectionRange } from '@testing-library/user-event/dist/utils';
+import RolesEditor from './RolesEditor';
 
 // interface UserObj{
 //     id:number;
@@ -55,29 +56,6 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Well Manager',
-  'Admin',
-  "role1",
-  "role2",
-  "role3",
-  "role4",
-  "role5",
-  "role6",
-];
-    // const [personName, setPersonName] = React.useState<string[]>([]);
-
-    // const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    //   const {
-    //     target: { value },
-    //   } = event;
-    //   setPersonName(
-    //     // On autofill we get a stringified value.
-    //     typeof value === 'string' ? value.split(',') : value,
-    //   );
-    // };
-
-
     const [UserData,setUserData] = useState({
       name:identifyUserObj.UserName,
       password:identifyUserObj.Password
@@ -100,45 +78,45 @@ const names = [
 
     // console.log(personName)
 
-    // const HandleSubmit = (e: React.FormEvent<EventTarget>)=>{
-    //   e.preventDefault();
+    const HandleSubmit = (e: React.FormEvent<EventTarget>)=>{
+      e.preventDefault();
 
-    //   const NewUser = identifyUserObj;
-    //   if(identifyUserObj.UserID==0){
-    //     NewUser.UserID=MaxId +1 ;
-    //   }
-    //   NewUser.UserName = UserData.name;
-    //   NewUser.Password = UserData.password;
-    //   NewUser.Roles = [];
-    // for(let i=0;i<selectionModel.length;i++){
-    //   for(let j=0;j<RolesArr.length;j++){
-    //     if(selectionModel[i] == RolesArr[j].RoleID){
-    //                NewUser.Roles.push(RolesArr[j]);
-    //                break;
-    //     }
-    //   }
-    // }
+      const NewUser = identifyUserObj;
+      if(identifyUserObj.UserID==0){
+        NewUser.UserID=MaxId +1 ;
+      }
+      NewUser.UserName = UserData.name;
+      NewUser.Password = UserData.password;
+      NewUser.Roles = [];
+    for(let i=0;i<selectionModel.length;i++){
+      for(let j=0;j<RolesArr.length;j++){
+        if(selectionModel[i] == RolesArr[j].RoleID){
+                   NewUser.Roles.push(RolesArr[j]);
+                   break;
+        }
+      }
+    }
 
-    // console.log(NewUser);
+    console.log(NewUser);
 
-    // handleClose();
+    handleClose();
 
-    // }
+    }
 
  
     //for datagrid for rows
-//     const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
-// let RolesArr:Role[]=[];
-
-// for(let i=0;i<5;i++){
-//   const temprole:Role=new Role();
-//   temprole.RoleID=i+1;
-//   temprole.RoleName=rolename[i];
-//   temprole.RolePermissions=[];
-//   temprole.WellPermissions=[];
-//   temprole.LastError="";
-//   RolesArr[i]=temprole;
-// }
+    const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
+let RolesArr:Role[]=[];
+    
+for(let i=0;i<5;i++){
+  const temprole:Role=new Role();
+  temprole.RoleID=i+1;
+  temprole.RoleName=rolename[i];
+  temprole.RolePermissions=[];
+  temprole.WellPermissions=[];
+  temprole.LastError="";
+  RolesArr[i]=temprole;
+}
 
     let userRoles = [];
     for(let i=0;i<identifyUserObj.Roles.length;i++){
@@ -159,7 +137,15 @@ const names = [
 
     const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>(selectedRoleIDArr);
     
+    const [rolesDialog,setRoleDialog] = useState<boolean>(false);
     
+    function AddRoleFunction(){
+      setRoleDialog(true);
+    }
+
+    function RoleDialogOpen(){
+      setRoleDialog(false);
+    }
 
     return (
         <div className="dialog" >
@@ -193,19 +179,19 @@ const names = [
 
             
             <label style={{width:'50px'}}>Roles</label>
-            <Button variant='contained' >Add Roles</Button>
+            <Button variant='contained' onClick={AddRoleFunction} >Add Roles</Button>
 
             <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
                   <DataGrid hideFooter {...data}  columns={columns} 
                      />
                 </div>
               
-
+            {rolesDialog && <RolesEditor RoleDialogOpen={RoleDialogOpen}/>}
 
             <Stack direction="row" spacing={4}>
               
             <Button variant="contained" color="success" type="submit" 
-            // onClick={HandleSubmit}
+            onClick={HandleSubmit}
             >Save</Button>
               
             <Button variant="contained" color="error" onClick={handleClose}> Cancel </Button>
