@@ -177,15 +177,13 @@ const initialRows: GridRowsProp = [
 
 export default function FullFeaturedCrudGrid() {
   
-  const [selectedValue, setSelectedValue] = React.useState("AYaz");
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const [dialog,setDialog] =React.useState<boolean>(false)
   const [EditObject , setEditObject] = React.useState<User>(new User());
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setDialog(false);
-    setSelectedValue(value);
     setEditObject(new User());
   };
 
@@ -300,7 +298,7 @@ export default function FullFeaturedCrudGrid() {
       />
     </Box>
     {console.log("hi")}
-    {dialog && (<UserEditor selectedValue={selectedValue} onClose={handleClose} identifyUserObj={EditObject} MaxId={MaxId}  />)}
+    {dialog && (<UserEditor onClose={handleClose} identifyUserObj={EditObject} MaxId={MaxId}  />)}
 
     </>
   );

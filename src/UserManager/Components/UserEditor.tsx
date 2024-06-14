@@ -22,22 +22,21 @@ import { setSelectionRange } from '@testing-library/user-event/dist/utils';
 //   }
 
 interface props {
-    selectedValue: string;
-    onClose: (value: string) => void;
+    onClose: () => void;
     identifyUserObj : User;
     MaxId : number;
 }
 const UserEditor:React.FC<props> = (props:props) => {
-    const { onClose, selectedValue , identifyUserObj , MaxId} = props;
+    const { onClose , identifyUserObj , MaxId} = props;
     console.log("The obj is" ,identifyUserObj)
   
     const handleClose = () => {
-      onClose(selectedValue);
+      onClose();
     };
   
-    const handleListItemClick = (value: string) => {
-      onClose(value);
-    };
+    // const handleListItemClick = (value: string) => {
+    //   onClose();
+    // };
   
     const emails = [
       "ayaz", 
@@ -194,7 +193,7 @@ const names = [
 
             
             <label style={{width:'50px'}}>Roles</label>
-            <Button variant='contained'>Add Roles</Button>
+            <Button variant='contained' >Add Roles</Button>
 
             <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
                   <DataGrid hideFooter {...data}  columns={columns} 
