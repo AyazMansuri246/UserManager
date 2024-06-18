@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogContent, DialogTitle, Stack } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -26,25 +26,27 @@ interface props {
     onClose: () => void;
     identifyUserObj : User;
     MaxId : number;
+    onSave: (pObjUser:User)=>void
 }
 const UserEditor:React.FC<props> = (props:props) => {
-    const { onClose , identifyUserObj , MaxId} = props;
-    console.log("The obj is" ,identifyUserObj)
+  const { onClose , identifyUserObj , MaxId} = props;
+  const [userRoles,setUserRoles] = useState<Role[]>(identifyUserObj.Roles);
+  console.log("this is initail userRoles",userRoles)
+    // console.log("The identify user is ",identifyUserObj)
+   
   
+    // useEffect(()=>{
+    //   let rolesArr = Object.values(identifyUserObj.Roles);
+    //   setUserRoles(rolesArr);
+    // })
+
     const handleClose = () => {
+      // setSelectionModel(selectedRoleIDArr);
       onClose();
     };
   
-    // const handleListItemClick = (value: string) => {
-    //   onClose();
-    // };
   
-    const emails = [
-      "ayaz", 
-      "a"
-    ]
-   console.log("he")
-
+   
     const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -67,7 +69,7 @@ const MenuProps = {
         // console.log(value , name);
 
         setUserData((preval)=>{
-          console.log(preval)
+         
           return {
             ...preval,
             [name] : value
@@ -83,21 +85,24 @@ const MenuProps = {
 
       const NewUser = identifyUserObj;
       if(identifyUserObj.UserID==0){
-        NewUser.UserID=MaxId +1 ;
+        NewUser.UserID=MaxId +1;
       }
       NewUser.UserName = UserData.name;
       NewUser.Password = UserData.password;
-      NewUser.Roles = [];
-    for(let i=0;i<selectionModel.length;i++){
-      for(let j=0;j<RolesArr.length;j++){
-        if(selectionModel[i] == RolesArr[j].RoleID){
-                   NewUser.Roles.push(RolesArr[j]);
-                   break;
-        }
-      }
-    }
-
+      NewUser.Roles = userRoles;
+    
+    // for(let i=0;i<selectionModel.length;i++){
+    //   for(let j=0;j<RolesArr.length;j++){
+    //     if(selectionModel[i] == RolesArr[j].RoleID){
+    //         NewUser.Roles.push(RolesArr[j]);
+    //         break;
+    //     }
+    //   }
+    // }
     console.log(NewUser);
+    // MaxId++;
+    props.onSave(NewUser);
+
 
     handleClose();
 
@@ -118,24 +123,26 @@ for(let i=0;i<5;i++){
   RolesArr[i]=temprole;
 }
 
-    let userRoles = [];
-    for(let i=0;i<identifyUserObj.Roles.length;i++){
-      let obj:{id:number,name:string}={id:0,name:"a"};
-      obj.id=identifyUserObj.Roles[i].RoleID;
-      obj.name=identifyUserObj.Roles[i].RoleName;
-      userRoles.push(obj);
-    }
+  // setUserRoles()
+    //  userRoles = [];
+    // for(let i=0;i<identifyUserObj.Roles.length;i++){
+    //   let obj:{id:number,name:string}={id:0,name:"a"};
+    //   obj.id=identifyUserObj.Roles[i].RoleID;
+    //   obj.name=identifyUserObj.Roles[i].RoleName;
+      
+    //   console.log(identifyUserObj)
+    // }
 
-    const rows =userRoles;
+    // const rows =userRoles;
     const columns = [
-      { field: 'id', headerName: 'ID', width: 90 },
-      { field: 'name', headerName: 'Role Name', width: 150 },
+      { field: 'RoleID', headerName: 'ID', width: 90 },
+      { field: 'RoleName', headerName: 'Role Name', width: 150 },
     ];
     
-    const data = { rows, columns };
-    const selectedRoleIDArr:number[] = props.identifyUserObj.Roles.map((role) => {return role.RoleID})   
+    // const data = { rows, columns };
+    // const selectedRoleIDArr:number[] = props.identifyUserObj.Roles.map((role) => {return role.RoleID})   
 
-    const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>(selectedRoleIDArr);
+    // const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>(selectedRoleIDArr);
     
     const [rolesDialog,setRoleDialog] = useState<boolean>(false);
     
@@ -145,6 +152,32 @@ for(let i=0;i<5;i++){
 
     function RoleDialogOpen(){
       setRoleDialog(false);
+    }
+
+    // const [flag,setflag]= useState<boolean>(true);
+    function handleRoleArray(arr:number[] | GridRowSelectionModel){
+      console.log("this ss" , arr)
+      debugger
+      for(let i=0;i<arr.length;i++){
+        let flag=1;
+        for(let j=0;j<userRoles.length;j++){
+          if(arr[i] == userRoles[j].RoleID){
+            flag=0;
+            break;
+          }
+        }
+        if(flag==1){
+          for(let k=0;k<RolesArr.length;k++){
+            if(arr[i]==RolesArr[k].RoleID){
+              console.log(RolesArr[k])
+              let temp=userRoles.map((role) => {return role;})
+              temp.push(RolesArr[k]);
+              setUserRoles(temp)
+              console.log(userRoles)
+            }
+          }
+        }
+      }
     }
 
     return (
@@ -182,11 +215,14 @@ for(let i=0;i<5;i++){
             <Button variant='contained' onClick={AddRoleFunction} >Add Roles</Button>
 
             <div style={{ height: 300, width: '78%' ,marginLeft: '20%' }}>
-                  <DataGrid hideFooter {...data}  columns={columns} 
+                  <DataGrid hideFooter 
+                  rows={userRoles}
+                  columns={columns} 
+                  getRowId={(r)=>r.RoleID}
                      />
                 </div>
               
-            {rolesDialog && <RolesEditor RoleDialogOpen={RoleDialogOpen}/>}
+            {rolesDialog && <RolesEditor RoleDialogOpen={RoleDialogOpen} handleRoleArray={handleRoleArray}/>}
 
             <Stack direction="row" spacing={4}>
               

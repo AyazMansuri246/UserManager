@@ -33,88 +33,7 @@ import {User} from '../DataObjects/User';
 import {Role} from "../DataObjects/Role";
 import { RolePermission } from '../DataObjects/RolePermission';
 import { RoleWellPermission } from '../DataObjects/RoleWellPermission';
-
-
-//dialog
-// const RootStyle = styled(Box)(({ theme }) => ({
-//     width: '100%',
-//     height: '100%',
-//     padding: '5px 0',
-//     margin: '10px 0',
-//   }));
   
-
-  
-
-
-
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-  return randomArrayItem(roles);
-};
-
-
-
-
-
-// let userList: User[] = [];
-// const loadDummyData=()=>{
-//     let objUser: User= new User();
-//     objUser.UserID=1;
-//     objUser.Password="123455";
-//     objUser.UserName="Admin";
-//       let objRole: Role= new Role();
-//         objRole.RoleID =0;
-//         objRole.RoleName="Admin";
-//         let rolePremission1 = new RolePermission();
-//         rolePremission1.PermissionID=1;
-//         rolePremission1.PermissionName="Well Manager";
-//         objRole.RolePermissions.push(rolePremission1);
-//         let rolePremission2 = new RolePermission();
-//         rolePremission2.PermissionID=2;
-//         rolePremission2.PermissionName="Console Manager";
-//         objRole.RolePermissions.push(rolePremission2);
-        
-//         let wellPermission1=new RoleWellPermission();
-//         wellPermission1.PermissionOn = "country";
-//         wellPermission1.RoleID = 0;
-//         wellPermission1.ObjectID = "461";
-
-//         objRole.WellPermissions.push(wellPermission1);
-
-//     objUser.Roles.push(objRole);
-
-//       let objRole1: Role= new Role();
-//         objRole1.RoleID =1;
-//         objRole1.RoleName="Manager";
-//         let role1Premission1 = new RolePermission();
-//         role1Premission1.PermissionID=1;
-//         role1Premission1.PermissionName="Well Manager";
-//         objRole1.RolePermissions.push(role1Premission1);
-//         let role1Premission2 = new RolePermission();
-//         role1Premission2.PermissionID=2;
-//         role1Premission2.PermissionName="Console Manager";
-//         objRole1.RolePermissions.push(role1Premission2);
-        
-//         let well1Permission1=new RoleWellPermission();
-//         well1Permission1.PermissionOn = "country";
-//         well1Permission1.RoleID = 0;
-//         well1Permission1.ObjectID = "461";
-
-//         objRole1.WellPermissions.push(well1Permission1);
-
-//     objUser.Roles.push(objRole1);
-
-//       return objUser;
-// }
-
-// const User1 = loadDummyData();
-// userList.push(User1);
-// User2.UserID=2;
-// User2.UserName="Ayaz";
-// const User2 = loadDummyData();
-// userList.push(User2);
-
 
 const rolename=["Admin","Well Manager","Software Engineer","User","Widget Manager"];
 let r1:Role[]=[];
@@ -128,7 +47,7 @@ for(let i=0;i<5;i++){
   temprole.LastError="";
   r1[i]=temprole;
 }
-console.log(r1);
+// console.log(r1);
 let usernames=["Shlok","ABC","DEF"];
 let UserArr:User[]=[];
 for(let i=0;i<3;i++){
@@ -144,64 +63,86 @@ for(let i=0;i<3;i++){
 }
 
 
-const MaxId = UserArr[UserArr.length-1].UserID;
 
-const getRoles= (arr:Role[])=>{
-  let str = "";
-  arr.forEach((role)=>{
-    str = str + role.RoleName + ", ";
-  })
-  str = str.slice(0,str.length-2);
-  return str;
-}
 
-const initialRows: GridRowsProp = [
-  {
-    id: UserArr[0].UserID,
-    name: UserArr[0].UserName,
-    role:getRoles(UserArr[0].Roles),
-  },
-  {
-    id: UserArr[1].UserID,
-    name: UserArr[1].UserName,
-    role:getRoles(UserArr[1].Roles),
-  },
-  {
-    id: UserArr[2].UserID,
-    name: UserArr[2].UserName,
-    role:getRoles(UserArr[2].Roles),
-  },
+// const getRoles= (arr:Role[])=>{
+//   let str = "";
+//   arr.forEach((role)=>{
+//     str = str + role.RoleName + ", ";
+//   })
+//   str = str.slice(0,str.length-2);
+//   return str;
+// }
+
+// const initialRows: GridRowsProp = [
+//   {
+//     id: UserArr[0].UserID,
+//     name: UserArr[0].UserName,
+//     role:getRoles(UserArr[0].Roles),
+//   },
+//   {
+//     id: UserArr[1].UserID,
+//     name: UserArr[1].UserName,
+//     role:getRoles(UserArr[1].Roles),
+//   },
+//   {
+//     id: UserArr[2].UserID,
+//     name: UserArr[2].UserName,
+//     role:getRoles(UserArr[2].Roles),
+//   },
   
-];
+// ];
 
 
 export default function FullFeaturedCrudGrid() {
   
-  const [rows, setRows] = React.useState(initialRows);
+  // const [rows, setRows] = React.useState(initialRows);
+  const [userRows,setUserRows] = React.useState<User[]>([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const [dialog,setDialog] =React.useState<boolean>(false)
   const [EditObject , setEditObject] = React.useState<User>(new User());
 
   const handleClose = () => {
     setDialog(false);
-    setEditObject(new User());
+    
   };
 
+  const [MaxId,setMaxId] = React.useState(100);
+  const onSaveUser = (pObjUser:User)=>{
+console.log(userRows)
+    let flag=1;
+    userRows.forEach((UserObj)=>{
+      if(UserObj.UserID == pObjUser.UserID){
+        flag=0;
+        UserObj.UserName=pObjUser.UserName;
+        UserObj.Password=pObjUser.Password;
+        UserObj.Roles=pObjUser.Roles;
+        // MaxId++;
+        // console.log("IN edit mode",MaxId)
+      }
+    })
+    if(flag){
+      setUserRows([...userRows,pObjUser]);
+      setMaxId(MaxId+1)
+      // console.log("In add mode",MaxId)
+    }
+  }
 
   const handleEditClick = (id: GridRowId) => () => {
-
-    const obj = initialRows.filter((obj)=>{
-        return obj.id == id;
-    })
-    console.log(obj[0].id);
+    
+    // const obj = initialRows.filter((obj)=>{
+    //     return obj.id == id;
+    // })
+    // console.log(obj[0].id);
 
     let user = new User();
-    for(let i=0;i<UserArr.length;i++){
-      if(id == UserArr[i].UserID){
-        user = UserArr[i];
+    for(let i=0;i<userRows.length;i++){
+      if(id == userRows[i].UserID){
+        user = userRows[i];
         break;
       }
     }
+    console.log(user);
 
 
     setEditObject(user);
@@ -212,19 +153,19 @@ export default function FullFeaturedCrudGrid() {
 
 
   const handleDeleteClick = (id: GridRowId) => () => {
-     let confirmation =window.confirm("Your want to delete the user?");
-    if(confirmation){
-      setRows(rows.filter((row) => row.id !== id));
-    }
+    //  let confirmation =window.confirm("Your want to delete the user?");
+    // if(confirmation){
+    //   setRows(rows.filter((row) => row.id !== id));
+    // }
   };
 
 
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 180, editable: true },
+    { field: 'UserName', headerName: 'Name', width: 180, editable: true },
 
     {
-      field: 'role',
+      field: 'Role',
       headerName: 'Roles',
       width: 220,
       editable: true,
@@ -264,6 +205,7 @@ export default function FullFeaturedCrudGrid() {
 
   function AddRecord(): void {
     console.log("add ")
+    setEditObject(new User());
     setDialog(true)
   }
 
@@ -291,14 +233,15 @@ export default function FullFeaturedCrudGrid() {
       
       <DataGrid
       hideFooter
-        rows={rows}
+        rows={userRows}
+        getRowId={(r)=>r.UserID}
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
       />
     </Box>
-    {console.log("hi")}
-    {dialog && (<UserEditor onClose={handleClose} identifyUserObj={EditObject} MaxId={MaxId}  />)}
+    {/* {console.log("hi")} */}
+    {dialog && (<UserEditor onClose={handleClose} identifyUserObj={EditObject} MaxId={MaxId} onSave={onSaveUser} />)}
 
     </>
   );

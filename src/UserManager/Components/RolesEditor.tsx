@@ -5,6 +5,7 @@ import { Role } from '../DataObjects/Role';
 
 interface props {
   RoleDialogOpen: () => void;
+  handleRoleArray: (arr: number[] | GridRowSelectionModel)=> void
 }
 
 const RolesEditor:React.FC<props> = (props) => {
@@ -45,11 +46,15 @@ const RolesEditor:React.FC<props> = (props) => {
 
   function HandleSubmit(): void {
     console.log("In Add roles ", selectionModel);
+
+    props.handleRoleArray(selectionModel);
+
+    props.RoleDialogOpen();
   }
 
         // const selectedRoleIDArr:number[] = props.identifyUserObj.Roles.map((role) => {return role.RoleID})   
     
-        const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>();
+        const [selectionModel, setSelectionModel] = React.useState<number[] | GridRowSelectionModel>([]);
         
         
   return (
